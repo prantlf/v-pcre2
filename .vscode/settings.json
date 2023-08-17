@@ -5,9 +5,6 @@
     "**/*_test": true,
     "**/*.dSYM": true
   },
-  "search.exclude": {
-    "**/node_modules": true
-  },
   "files.associations": {
     "typeinfo": "c"
   }
