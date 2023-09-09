@@ -46,144 +46,365 @@ v install prantlf.pcre2
 v install --git https://github.com/prantlf/v-pcre2
 ```
 
-## API
+## Usage
 
-The following types, constants, functions and methods are exported:
+For the syntax of the regular expression patterns, see the [quick reference] or the [exhaustive documentation] from the web site with the [original documentation] for PCRE for C. Especially notable are pages about the [pattern limits] and the [compatibility with PERL5].
 
-### Types
+### Compile
 
-    struct RegEx {}
+A regular expression pattern has to be compiled at first. Both synonymous methods share the same functionality:
 
-    struct Match {}
+```go
+import prantlf.pcre { pcre_compile }
+pcre2_compile(source string, options u32) !&RegEx
+```
 
-    struct NoMatch {}
+```go
+import prantlf.pcre
+pcre2.compile(source string, options u32) !&RegEx
+```
 
-    struct NoReplace {}
+The following options can be applied. Combine multiple options together with the `|` (binary OR) operator:
 
-    struct CompileError {
-      msg    string
-      code   int
-      offset int
-    }
+    opt_ANCHORED             Force pattern anchoring
+    opt_ALLOW_EMPTY_CLASS    Allow empty classes
+    opt_ALT_BSUX             Alternative handling of \u, \U, and \x
+    opt_ALT_CIRCUMFLEX       Alternative handling of ^ in multiline mode
+    opt_ALT_VERBNAMES        Process backslashes in verb names
+    opt_AUTO_CALLOUT         Compile automatic callouts
+    opt_CASELESS             Do caseless matching
+    opt_DOLLAR_ENDONLY       $ not to match newline at end
+    opt_DOTALL               . matches anything including NL
+    opt_DUPNAMES             Allow duplicate names for subpatterns
+    opt_ENDANCHORED          Pattern can match only at end of subject
+    opt_EXTENDED             Ignore white space and # comments
+    opt_FIRSTLINE            Force matching to be before newline
+    opt_LITERAL              Pattern characters are all literal
+    opt_MATCH_INVALID_UTF    Enable support for matching invalid UTF
+    opt_MATCH_UNSET_BACKREF  Match unset backreferences
+    opt_MULTILINE            ^ and $ match newlines within data
+    opt_NEVER_BACKSLASH_C    Lock out the use of \C in patterns
+    opt_NEVER_UCP            Lock out opt_ucp, e.g. via (*UCP)
+    opt_NEVER_UTF            Lock out opt_utf, e.g. via (*UTF)
+    opt_NO_AUTO_CAPTURE      Disable numbered capturing paren-
+                             theses (named ones available)
+    opt_NO_AUTO_POSSESS      Disable auto-possessification
+    opt_NO_DOTSTAR_ANCHOR    Disable automatic anchoring for .*
+    opt_NO_START_OPTIMIZE    Disable match-time start optimizations
+    opt_NO_UTF_CHECK         Do not check the pattern for UTF validity
+                             (only relevant if opt_utf is set)
+    opt_UCP                  Use Unicode properties for \d, \w, etc.
+    opt_UNGREEDY             Invert greediness of quantifiers
+    opt_USE_OFFSET_LIMIT     Enable offset limit for unanchored matching
+    opt_UTF                  Treat pattern and subjects as UTF strings
 
-    struct ExecuteError {
-      msg  string
-      code int
-    }
 
-### Constants
+If the compilation fails, an error will be returned:
 
-    // The following option bits can be passed to both compile() and exec().
-    // opt_no_utf_check affects only the function to which it is passed.
+```go
+struct CompileError {
+  msg    string  // the error message
+  code   int     // the error code
+  offset int     // if >= 0, points to the pattern where the compilation failed
+}
+```
 
-    pub const opt_anchored = u32(0x80000000) /*  */
-    pub const opt_no_utf_check = u32(0x40000000) /*  */
-    pub const opt_endanchored = u32(0x20000000) /*  */
+The following error codes may encounter and are exported as public constants:
 
-    // The following option bits can be passed only to compile(). However,
-    // they may affect exec() too. The following tags indicate which:
-    //
-    // C   alters what is compiled by compile()
-    // E   is inspected during exec() execution
+```go
+error_end_backslash                  = 101
+error_end_backslash_c                = 102
+error_unknown_escape                 = 103
+error_quantifier_out_of_order        = 104
+error_quantifier_too_big             = 105
+error_missing_square_bracket         = 106
+error_escape_invalid_in_class        = 107
+error_class_range_order              = 108
+error_quantifier_invalid             = 109
+error_internal_unexpected_repeat     = 110
+error_invalid_after_parens_query     = 111
+error_missing_closing_parenthesis    = 114
+error_bad_subpattern_reference       = 115
+error_null_pattern                   = 116
+error_bad_options                    = 117
+error_missing_comment_closing        = 118
+error_parentheses_nest_too_deep      = 119
+error_pattern_too_large              = 120
+error_heap_failed                    = 121
+error_unmatched_closing_parenthesis  = 122
+error_internal_code_overflow         = 123
+error_missing_condition_closing      = 124
+error_lookbehind_not_fixed_length    = 125
+error_zero_relative_reference        = 126
+error_too_many_condition_branches    = 127
+error_condition_assertion_expected   = 128
+error_bad_relative_reference         = 129
+error_unknown_posix_class            = 130
+error_internal_study_error           = 131
+error_unicode_not_supported          = 132
+error_parentheses_stack_check        = 133
+error_code_point_too_big             = 134
+error_lookbehind_too_complicated     = 135
+error_lookbehind_invalid_backslash_c = 136
+error_unsupported_escape_sequence    = 137
+error_callout_number_too_big         = 138
+error_missing_callout_closing        = 139
+error_escape_invalid_in_verb         = 140
+error_unrecognized_after_query_p     = 141
+error_missing_name_terminator        = 142
+error_duplicate_subpattern_name      = 143
+error_invalid_subpattern_name        = 144
+error_unicode_properties_unavailable = 145
+error_malformed_unicode_property     = 146
+error_unknown_unicode_property       = 147
+error_subpattern_name_too_long       = 148
+error_too_many_named_subpatterns     = 149
+error_class_invalid_range            = 150
+error_octal_byte_too_big             = 151
+error_internal_overran_workspace     = 152
+error_internal_missing_subpattern    = 153
+error_define_too_many_branches       = 154
+error_backslash_o_missing_brace      = 155
+error_internal_unknown_newline       = 156
+error_backslash_g_syntax             = 157
+error_parens_query_r_missing_closing = 158
+error_verb_unknown                   = 160
+error_subpattern_number_too_big      = 161
+error_subpattern_name_expected       = 162
+error_internal_parsed_overflow       = 163
+error_invalid_octal                  = 164
+error_subpattern_names_mismatch      = 165
+error_mark_missing_argument          = 166
+error_invalid_hexadecimal            = 167
+error_backslash_c_syntax             = 168
+error_backslash_k_syntax             = 169
+error_internal_bad_code_lookbehinds  = 170
+error_backslash_n_in_class           = 171
+error_callout_string_too_long        = 172
+error_unicode_disallowed_code_point  = 173
+error_utf_is_disabled                = 174
+error_ucp_is_disabled                = 175
+error_verb_name_too_long             = 176
+error_backslash_u_code_point_too_big = 177
+error_missing_octal_or_hex_digits    = 178
+error_version_condition_syntax       = 179
+error_internal_bad_code_auto_possess = 180
+error_callout_no_string_delimiter    = 181
+error_callout_bad_string_delimiter   = 182
+error_backslash_c_caller_disabled    = 183
+error_query_barjx_nest_too_deep      = 184
+error_backslash_c_library_disabled   = 185
+error_pattern_too_complicated        = 186
+error_lookbehind_too_long            = 187
+error_pattern_string_too_long        = 188
+error_internal_bad_code              = 189
+error_internal_bad_code_in_skip      = 190
+error_bad_literal_options            = 192
+error_supported_only_in_unicode      = 193
+error_invalid_hyphen_in_options      = 194
+error_alpha_assertion_unknown        = 195
+error_script_run_not_available       = 196
+error_too_many_captures              = 197
+error_condition_atomic_assertion_expected  = 198
+error_backslash_k_in_lookaround      = 199
+```
 
-    pub const opt_allow_empty_class = u32(0x00000001) /* C */
-    pub const opt_alt_bsux = u32(0x00000002) /* C */
-    pub const opt_auto_callout = u32(0x00000004) /* C */
-    pub const opt_caseless = u32(0x00000008) /* C */
-    pub const opt_dollar_endonly = u32(0x00000010) /* E */
-    pub const opt_dotall = u32(0x00000020) /* C */
-    pub const opt_dupnames = u32(0x00000040) /* C */
-    pub const opt_extended = u32(0x00000080) /* C */
-    pub const opt_firstline = u32(0x00000100) /* E */
-    pub const opt_match_unset_backref = u32(0x00000200) /* C E */
-    pub const opt_multiline = u32(0x00000400) /* C */
-    pub const opt_never_ucp = u32(0x00000800) /* C */
-    pub const opt_never_utf = u32(0x00001000) /* C */
-    pub const opt_no_auto_capture = u32(0x00002000) /* C */
-    pub const opt_no_auto_possess = u32(0x00004000) /* C */
-    pub const opt_no_dotstar_anchor = u32(0x00008000) /* C */
-    pub const opt_no_start_optimize = u32(0x00010000) /* E */
-    pub const opt_ucp = u32(0x00020000) /* C E */
-    pub const opt_ungreedy = u32(0x00040000) /* C */
-    pub const opt_utf = u32(0x00080000) /* C E */
-    pub const opt_never_backslash_c = u32(0x00100000) /* C */
-    pub const opt_alt_circumflex = u32(0x00200000) /* E */
-    pub const opt_alt_verbnames = u32(0x00400000) /* C */
-    pub const opt_use_offset_limit = u32(0x00800000) /* E */
-    pub const opt_extended_more = u32(0x01000000) /* C */
-    pub const opt_literal = u32(0x02000000) /* C */
-    pub const opt_match_invalid_utf = u32(0x04000000) /* E */
+Don't forget to free the regular expression object when you do not need it any more:
 
-    // These are for exec(). Note that opt_anchored, opt_endanchored and
-    // opt_no_utf_check can also be passed to this function.
+```go
+(r &RegEx) free()
+defer { re.free() }
+```
 
-    pub const opt_notbol = u32(0x00000001) /*  */
-    pub const opt_noteol = u32(0x00000002) /*  */
-    pub const opt_notempty = u32(0x00000004) /* These two must be kept */
-    pub const opt_notempty_atstart = u32(0x00000008) /* adjacent to each other. */
-    pub const opt_partial_soft = u32(0x00000010) /*  */
-    pub const opt_partial_hard = u32(0x00000020) /*  */
+Some characteristics of the regular expression, which are usually needed when executing it later, can be enquired right after compiling it:
 
-    // These are for replace().
+```go
+struct RegEx {
+  captures int  // total count of the capturing groups
+  names    int  // total count of the named capturing groups
+}
+```
 
-    pub const opt_replace_groups = u32(0x00020000) /* C6 */
+```go
+(r &RegEx) group_index_by_name(name string) int
+(r &RegEx) group_name_by_index(idx int) string
+```
 
-### Functions
+See also the [original documentation for pcre_compile].
 
-    pcre2_compile(source string, options u32) !&RegEx
+### Execute
 
-### Methods
+After compiling, the regular expression can be executed with various subjects:
 
-    (r &RegEx) free()
+```go
+(r &RegEx) exec(subject string, options u32) !Match
+(r &RegEx) exec_within(subject string, start int, end int, options u32) !Match
+(r &RegEx) exec_within_nochk(subject string, start int, end int, options u32) !Match
+```
 
-    (r &RegEx) group_index_by_name(name string) int
-    (r &RegEx) group_name_by_index(idx int) string
+The following options can be applied. Combine multiple options together with the `|` (binary OR) operator:
 
-    (r &RegEx) exec(subject string, options u32) !Match
-    (r &RegEx) exec_within(subject string, start int, end int, options u32) !Match
-    (r &RegEx) exec_within_nochk(subject string, start int, end int, options u32) !Match
+    opt_anchored          Match only at the first position
+    opt_endanchored       Pattern can match only at end of subject
+    opt_notbol            Subject string is not the beginning of a line
+    opt_noteol            Subject string is not the end of a line
+    opt_notempty          An empty string is not a valid match
+    opt_notempty_atstart  An empty string at the start of the subject
+                          is not a valid match
+    opt_no_utf_check      Do not check the subject for UTF validity
+                          (only relevant if opt_UTF was set at compile time)
+    opt_partial_hard      Return error_partial for a partial match
+                          even if there is a full match
+    opt_partial_soft      Return error_partial for a partial match
+                          if no full matches are found
 
-    (r &RegEx) matches(s string, opt u32) !bool
-    (r &RegEx) matches_within(s string, at int, end int, opt u32) !bool
-    (r &RegEx) matches_within_nochk(s string, at int, stop int, opt u32) !bool
+If the execution succeeds, an object with information about the match will be returned:
 
-    (r &RegEx) contains(s string, opt u32) !bool
-    (r &RegEx) contains_within(s string, at int, end int, opt u32) !bool
-    (r &RegEx) contains_within_nochk(s string, at int, stop int, opt u32) !bool
+```go
+struct Match {}
+```
 
-    (r &RegEx) starts_with(s string, opt u32) !bool
-    (r &RegEx) starts_with_within(s string, at int, end int, opt u32) !bool
-    (r &RegEx) starts_with_within_nochk(s string, at int, stop int, opt u32) !bool
+Capturing groups can be obtained by the following methods, which return `none`, if the group number is invalid. The group number `0` (zero) means the whole match:
 
-    (r &RegEx) index_of(s string, option u32) !int
-    (r &RegEx) index_of_within(s string, start int, end int, opt u32) !int
-    (r &RegEx) index_of_within_nochk(s string, start int, stop int, opt u32) !int
+```go
+(m &Match) group_bounds(idx int) ?(int, int)
+(m &Match) group_text(subject string, idx int) ?string
+```
 
-    (r &RegEx) index_range(s string, opt u32) !(int, int)
-    (r &RegEx) index_range_within(s string, start int, end int, opt u32) !(int, int)
-    (r &RegEx) index_range_within_nochk(s string, start int, stop int, opt u32) !(int, int)
+Don't forget to free the match object when you do not need it any more:
 
-    (r &RegEx) ends_with(s string, opt u32) !bool
-    (r &RegEx) ends_with_within(s string, from int, to int, opt u32) !bool
-    (r &RegEx) ends_with_within_nochk(s string, from int, to int, opt u32) !bool
+```go
+(m &Match) free()
+defer { m.free() }
+```
 
-    (r &RegEx) count_of(s string, opt u32) !int
-    (r &RegEx) count_of_within(s string, start int, end int, opt u32) !int
-    (r &RegEx) count_of_within_nochk(s string, start int, stop int, opt u32) !int
+If the execution cannot match the pattern, a special error will be returned:
 
-    (r &RegEx) split(s string, opt u32) ![]string
-    (r &RegEx) split_first(s string, opt u32) ![]string
+```go
+struct NoMatch {}
+```
 
-    (r &RegEx) chop(s string, opt u32) ![]string
-    (r &RegEx) chop_first(s string, opt u32) ![]string
+If the execution matches the pattern only partially - see options `opt_partial_hard` and `opt_partial_soft`, a special error will be returned:
 
-    (r &RegEx) replace(s string, with string, opt u32) !string
-    (r &RegEx) replace_first(s string, with string, opt u32) !string
+```go
+struct Partial {}
+```
 
-    (r &Match) free()
+If the execution fails from other reasons, a general error will be returned:
 
-    (m &Match) group_bounds(idx int) ?(int, int)
-    (m &Match) group_text(subject string, idx int) ?string
+```go
+struct ExecuteError {
+  msg  string
+  code int
+}
+```
+
+The following error codes may encounter and are exported as public constants:
+
+```go
+error_baddata           = -29
+error_mixedtables       = -30
+error_badmagic          = -31
+error_badmode           = -32
+error_badoffset         = -33
+error_badoption         = -34
+error_badreplacement    = -35
+error_badutfoffset      = -36
+error_internal          = -44
+error_matchlimit        = -47
+error_nomemory          = -48
+error_nosubstring       = -49
+error_nouniquesubstring = -50
+error_null              = -51
+error_recurseloop       = -52
+error_depthlimit        = -53
+error_unavailable       = -54
+error_badoffsetlimit    = -56
+error_badrepescape      = -57
+error_repmissingbrace   = -58
+error_badsubstitution   = -59
+error_badsubspattern    = -60
+error_toomanyreplace    = -61
+error_badserializeddata = -62
+error_heaplimit         = -63
+error_convert_syntax    = -64
+error_internal_dupmatch = -65
+```
+
+See also the [original documentation for pcre_match] and the description of the [partial matching].
+
+## Others
+
+The API consists of two parts - basic compilation and execution of a regular expression, corresponding with the [PCRE] C API described above and convenience functions for typical string checking, searching, splitting and replacing described below.
+
+### Searching
+
+```go
+(r &RegEx) matches(s string, opt int) !bool
+(r &RegEx) matches_within(s string, at int, end int, opt int) !bool
+(r &RegEx) matches_within_nochk(s string, at int, stop int, opt int) !bool
+
+(r &RegEx) contains(s string, opt int) !bool
+(r &RegEx) contains_within(s string, at int, end int, opt int) !bool
+(r &RegEx) contains_within_nochk(s string, at int, stop int, opt int) !bool
+
+(r &RegEx) starts_with(s string, opt int) !bool
+(r &RegEx) starts_with_within(s string, at int, end int, opt int) !bool
+(r &RegEx) starts_with_within_nochk(s string, at int, stop int, opt int) !bool
+
+(r &RegEx) index_of(s string, option int) !int
+(r &RegEx) index_of_within(s string, start int, end int, opt int) !int
+(r &RegEx) index_of_within_nochk(s string, start int, stop int, opt int) !int
+
+(r &RegEx) index_range(s string, opt int) !(int, int)
+(r &RegEx) index_range_within(s string, start int, end int, opt int) !(int, int)
+(r &RegEx) index_range_within_nochk(s string, start int, stop int, opt int) !(int, int)
+
+(r &RegEx) ends_with(s string, opt int) !bool
+(r &RegEx) ends_with_within(s string, from int, to int, opt int) !bool
+(r &RegEx) ends_with_within_nochk(s string, from int, to int, opt int) !bool
+
+(r &RegEx) count_of(s string, opt int) !int
+(r &RegEx) count_of_within(s string, start int, end int, opt int) !int
+(r &RegEx) count_of_within_nochk(s string, start int, stop int, opt int) !int
+```
+
+### Replacing
+
+Replace either all occurrences or only the first one matching the pattern of the regular expression:
+
+```go
+(r &RegEx) replace(s string, with string, opt int) !string
+(r &RegEx) replace_first(s string, with string, opt int) !string
+```
+
+If the regular expression doesn't match the pattern, a special error will be returned:
+
+```go
+struct NoMatch {}
+```
+
+If the regular expression matches, but the replacement string is the same as the found string, so the replacing wouldn't change anything, a special error will be returned:
+
+```go
+struct NoReplace {}
+```
+
+### Splitting
+
+Split the input string by the regular expression and return the remaining parts in a string array:
+
+```go
+(r &RegEx) split(s string, opt int) ![]string
+(r &RegEx) split_first(s string, opt int) ![]string
+```
+
+Split the input string by the regular expression and return all parts, both remaining and splitting, in a string array:
+
+```go
+(r &RegEx) chop(s string, opt int) ![]string
+(r &RegEx) chop_first(s string, opt int) ![]string
+```
 
 ## Contributing
 
@@ -197,3 +418,11 @@ Licensed under the MIT license.
 
 [VPM]: https://vpm.vlang.io/packages/prantlf.pcre
 [PCRE]: https://www.pcre.org/
+[original documentation]: https://www.pcre.org/current/doc/html/
+[original documentation for pcre_compile]: https://www.pcre.org/current/doc/html/pcre2_compile.html
+[original documentation for pcre_match]: https://www.pcre.org/current/doc/html/pcre2_match.html
+[partial matching]: https://www.pcre.org/current/doc/html/pcre2partial.html
+[quick reference]: https://www.pcre.org/current/doc/html/pcre2syntax.html
+[exhaustive documentation]: https://www.pcre.org/current/doc/html/pcre2pattern.html
+[pattern limits]: https://www.pcre.org/current/doc/html/pcre2limits.html
+[compatibility with PERL5]: https://www.pcre.org/current/doc/html/pcre2compat.html

@@ -142,6 +142,7 @@ fn C.pcre2_pattern_info(code &C.pcre2_code, what u32, where voidptr) int
 fn C.pcre2_match(code &C.pcre2_code, subject &u8, length usize, start_offset usize, options u32, match_data &C.pcre2_match_data, mcontext &C.pcre2_match_context) int
 fn C.pcre2_match_data_create_from_pattern(code &C.pcre2_code, pcre2_general_context &gcontext) &C.pcre2_match_data
 fn C.pcre2_get_ovector_pointer(match_data &C.pcre2_match_data) &usize
+fn C.pcre2_get_ovector_count(match_data &C.pcre2_match_data) usize
 
 fn C.pcre2_code_free(code &C.pcre2_code)
 fn C.pcre2_match_data_free(match_data &C.pcre2_match_data)

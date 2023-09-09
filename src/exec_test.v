@@ -38,6 +38,18 @@ fn test_exec_match() {
 	assert start == 0
 	assert end == 1
 	assert m.group_text(s, 0)? == 'a'
+	if _, _ := m.group_bounds(-1) {
+		assert false
+	}
+	if _, _ := m.group_text(s, -1) {
+		assert false
+	}
+	if _, _ := m.group_bounds(1) {
+		assert false
+	}
+	if _, _ := m.group_text(s, 1) {
+		assert false
+	}
 }
 
 fn test_exec_group() {
@@ -126,4 +138,30 @@ fn test_exec_two_named_groups() {
 	assert start == 3
 	assert end == 4
 	assert m.group_text(s, 2)? == 'd'
+}
+
+fn test_exec_either_group() {
+	re := pcre2_compile('a(b)|(d)', 0)!
+	defer {
+		re.free()
+	}
+	s := 'abcd'
+	m := re.exec(s, 0)!
+	defer {
+		m.free()
+	}
+	mut start, mut end := m.group_bounds(0)
+	assert start == 0
+	assert end == 2
+	assert m.group_text(s, 0)? == 'ab'
+	start, end = m.group_bounds(1)
+	assert start == 1
+	assert end == 2
+	assert m.group_text(s, 1)? == 'b'
+	if _, _ := m.group_bounds(2) {
+		assert false
+	}
+	if _, _ := m.group_text(s, 2) {
+		assert false
+	}
 }

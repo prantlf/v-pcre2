@@ -10,7 +10,11 @@ pub:
 }
 
 fn (e &CompileError) msg() string {
-	return e.msg
+	return if e.offset >= 0 {
+		'${e.msg} at ${e.offset}'
+	} else {
+		e.msg
+	}
 }
 
 [noinit]
@@ -32,6 +36,15 @@ pub struct NoMatch {
 
 fn (e &NoMatch) msg() string {
 	return 'no match'
+}
+
+[noinit]
+pub struct Partial {
+	Error
+}
+
+fn (e &Partial) msg() string {
+	return 'partial'
 }
 
 [noinit]
