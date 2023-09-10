@@ -9,7 +9,7 @@ struct Name {
 }
 
 [heap; noinit]
-struct RegEx {
+pub struct RegEx {
 	re        &C.pcre2_code
 	name_buf  string
 	name_data []Name
