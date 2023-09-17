@@ -6,7 +6,7 @@ This package uses the current version, PCRE2, released in 2015, is now at versio
 
 ## Synopsis
 
-```go
+```v
 import prantlf.pcre2 { pcre2_compile }
 
 pattern := r'answer (?<answer>\d+)'
@@ -54,12 +54,12 @@ For the syntax of the regular expression patterns, see the [quick reference] or 
 
 A regular expression pattern has to be compiled at first. Both synonymous methods share the same functionality:
 
-```go
+```v
 import prantlf.pcre { pcre_compile }
 pcre2_compile(source string, options u32) !&RegEx
 ```
 
-```go
+```v
 import prantlf.pcre
 pcre2.compile(source string, options u32) !&RegEx
 ```
@@ -101,7 +101,7 @@ The following options can be applied. Combine multiple options together with the
 
 If the compilation fails, an error will be returned:
 
-```go
+```v
 struct CompileError {
   msg    string  // the error message
   code   int     // the error code
@@ -111,7 +111,7 @@ struct CompileError {
 
 The following error codes may encounter and are exported as public constants:
 
-```go
+```v
 error_end_backslash                  = 101
 error_end_backslash_c                = 102
 error_unknown_escape                 = 103
@@ -211,21 +211,21 @@ error_backslash_k_in_lookaround      = 199
 
 Don't forget to free the regular expression object when you do not need it any more:
 
-```go
+```v
 (r &RegEx) free()
 defer { re.free() }
 ```
 
 Some characteristics of the regular expression, which are usually needed when executing it later, can be enquired right after compiling it:
 
-```go
+```v
 struct RegEx {
   captures int  // total count of the capturing groups
   names    int  // total count of the named capturing groups
 }
 ```
 
-```go
+```v
 (r &RegEx) group_index_by_name(name string) int
 (r &RegEx) group_name_by_index(idx int) string
 ```
@@ -236,7 +236,7 @@ See also the [original documentation for pcre_compile].
 
 After compiling, the regular expression can be executed with various subjects:
 
-```go
+```v
 (r &RegEx) exec(subject string, options u32) !Match
 (r &RegEx) exec_within(subject string, start int, end int, options u32) !Match
 (r &RegEx) exec_within_nochk(subject string, start int, end int, options u32) !Match
@@ -260,39 +260,39 @@ The following options can be applied. Combine multiple options together with the
 
 If the execution succeeds, an object with information about the match will be returned:
 
-```go
+```v
 struct Match {}
 ```
 
 Capturing groups can be obtained by the following methods, which return `none`, if the group number is invalid. The group number `0` (zero) means the whole match:
 
-```go
+```v
 (m &Match) group_bounds(idx int) ?(int, int)
 (m &Match) group_text(subject string, idx int) ?string
 ```
 
 Don't forget to free the match object when you do not need it any more:
 
-```go
+```v
 (m &Match) free()
 defer { m.free() }
 ```
 
 If the execution cannot match the pattern, a special error will be returned:
 
-```go
+```v
 struct NoMatch {}
 ```
 
 If the execution matches the pattern only partially - see options `opt_partial_hard` and `opt_partial_soft`, a special error will be returned:
 
-```go
+```v
 struct Partial {}
 ```
 
 If the execution fails from other reasons, a general error will be returned:
 
-```go
+```v
 struct ExecuteError {
   msg  string
   code int
@@ -301,7 +301,7 @@ struct ExecuteError {
 
 The following error codes may encounter and are exported as public constants:
 
-```go
+```v
 error_baddata           = -29
 error_mixedtables       = -30
 error_badmagic          = -31
@@ -339,7 +339,7 @@ The API consists of two parts - basic compilation and execution of a regular exp
 
 ### Searching
 
-```go
+```v
 (r &RegEx) matches(s string, opt int) !bool
 (r &RegEx) matches_within(s string, at int, end int, opt int) !bool
 (r &RegEx) matches_within_nochk(s string, at int, stop int, opt int) !bool
@@ -373,20 +373,20 @@ The API consists of two parts - basic compilation and execution of a regular exp
 
 Replace either all occurrences or only the first one matching the pattern of the regular expression:
 
-```go
+```v
 (r &RegEx) replace(s string, with string, opt int) !string
 (r &RegEx) replace_first(s string, with string, opt int) !string
 ```
 
 If the regular expression doesn't match the pattern, a special error will be returned:
 
-```go
+```v
 struct NoMatch {}
 ```
 
 If the regular expression matches, but the replacement string is the same as the found string, so the replacing wouldn't change anything, a special error will be returned:
 
-```go
+```v
 struct NoReplace {}
 ```
 
@@ -394,14 +394,14 @@ struct NoReplace {}
 
 Split the input string by the regular expression and return the remaining parts in a string array:
 
-```go
+```v
 (r &RegEx) split(s string, opt int) ![]string
 (r &RegEx) split_first(s string, opt int) ![]string
 ```
 
 Split the input string by the regular expression and return all parts, both remaining and splitting, in a string array:
 
-```go
+```v
 (r &RegEx) chop(s string, opt int) ![]string
 (r &RegEx) chop_first(s string, opt int) ![]string
 ```
