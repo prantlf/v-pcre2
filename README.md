@@ -2,7 +2,7 @@
 
 The [PCRE] library is a [fast](bench/README.md) set of functions that implement regular expression pattern matching using the same syntax and semantics as Perl 5.
 
-This package uses the current version, PCRE2, released in 2015, is now at version 10.42.
+This package uses the current version, PCRE2, released in 2015, is now at version 10.42. If you are interested in older, but still widely deployed PCRE library, originally released in 1997 and now at version 8.45, see [prantlf.pcre].
 
 ## Synopsis
 
@@ -66,37 +66,37 @@ pcre2.compile(source string, options u32) !&RegEx
 
 The following options can be applied. Combine multiple options together with the `|` (binary OR) operator:
 
-    opt_ANCHORED             Force pattern anchoring
-    opt_ALLOW_EMPTY_CLASS    Allow empty classes
-    opt_ALT_BSUX             Alternative handling of \u, \U, and \x
-    opt_ALT_CIRCUMFLEX       Alternative handling of ^ in multiline mode
-    opt_ALT_VERBNAMES        Process backslashes in verb names
-    opt_AUTO_CALLOUT         Compile automatic callouts
-    opt_CASELESS             Do caseless matching
-    opt_DOLLAR_ENDONLY       $ not to match newline at end
-    opt_DOTALL               . matches anything including NL
-    opt_DUPNAMES             Allow duplicate names for subpatterns
-    opt_ENDANCHORED          Pattern can match only at end of subject
-    opt_EXTENDED             Ignore white space and # comments
-    opt_FIRSTLINE            Force matching to be before newline
-    opt_LITERAL              Pattern characters are all literal
-    opt_MATCH_INVALID_UTF    Enable support for matching invalid UTF
-    opt_MATCH_UNSET_BACKREF  Match unset backreferences
-    opt_MULTILINE            ^ and $ match newlines within data
-    opt_NEVER_BACKSLASH_C    Lock out the use of \C in patterns
-    opt_NEVER_UCP            Lock out opt_ucp, e.g. via (*UCP)
-    opt_NEVER_UTF            Lock out opt_utf, e.g. via (*UTF)
-    opt_NO_AUTO_CAPTURE      Disable numbered capturing paren-
+    opt_anchored             Force pattern anchoring
+    opt_allow_empty_class    Allow empty classes
+    opt_alt_bsux             Alternative handling of \u, \U, and \x
+    opt_alt_circumflex       Alternative handling of ^ in multiline mode
+    opt_alt_verbnames        Process backslashes in verb names
+    opt_auto_callout         Compile automatic callouts
+    opt_caseless             Do caseless matching
+    opt_dollar_endonly       $ not to match newline at end
+    opt_dotall               . matches anything including NL
+    opt_dupnames             Allow duplicate names for subpatterns
+    opt_endanchored          Pattern can match only at end of subject
+    opt_extended             Ignore white space and # comments
+    opt_firstline            Force matching to be before newline
+    opt_literal              Pattern characters are all literal
+    opt_match_invalid_utf    Enable support for matching invalid UTF
+    opt_match_unset_backref  Match unset backreferences
+    opt_multiline            ^ and $ match newlines within data
+    opt_never_backslash_c    Lock out the use of \C in patterns
+    opt_never_ucp            Lock out opt_ucp, e.g. via (*UCP)
+    opt_never_utf            Lock out opt_utf, e.g. via (*UTF)
+    opt_no_auto_capture      Disable numbered capturing paren-
                              theses (named ones available)
-    opt_NO_AUTO_POSSESS      Disable auto-possessification
-    opt_NO_DOTSTAR_ANCHOR    Disable automatic anchoring for .*
-    opt_NO_START_OPTIMIZE    Disable match-time start optimizations
-    opt_NO_UTF_CHECK         Do not check the pattern for UTF validity
+    opt_no_auto_possess      Disable auto-possessification
+    opt_no_dotstar_anchor    Disable automatic anchoring for .*
+    opt_no_start_optimize    Disable match-time start optimizations
+    opt_no_utf_check         Do not check the pattern for UTF validity
                              (only relevant if opt_utf is set)
-    opt_UCP                  Use Unicode properties for \d, \w, etc.
-    opt_UNGREEDY             Invert greediness of quantifiers
-    opt_USE_OFFSET_LIMIT     Enable offset limit for unanchored matching
-    opt_UTF                  Treat pattern and subjects as UTF strings
+    opt_ucp                  Use Unicode properties for \d, \w, etc.
+    opt_ungreedy             Invert greediness of quantifiers
+    opt_use_offset_limit     Enable offset limit for unanchored matching
+    opt_utf                  Treat pattern and subjects as UTF strings
 
 
 If the compilation fails, an error will be returned:
@@ -426,3 +426,4 @@ Licensed under the MIT license.
 [exhaustive documentation]: https://www.pcre.org/current/doc/html/pcre2pattern.html
 [pattern limits]: https://www.pcre.org/current/doc/html/pcre2limits.html
 [compatibility with PERL5]: https://www.pcre.org/current/doc/html/pcre2compat.html
+[prantlf.pcre]: https://github.com/prantlf/v-pcre
