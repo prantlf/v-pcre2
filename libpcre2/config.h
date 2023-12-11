@@ -276,7 +276,6 @@ sure both macros are undefined; an emulation function will then be used. */
 
 /* Define to any value if linking statically (TODO: make nice with Libtool) */
 /* #undef PCRE2_STATIC */
-#define PCRE_STATIC /**/
 
 /* Define to necessary symbol if this constant uses a non-standard name on
    your system. */

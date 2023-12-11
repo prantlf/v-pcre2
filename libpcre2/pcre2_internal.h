@@ -122,7 +122,11 @@ only if it is not already set. */
 #      define PCRE2_EXP_DECL       extern __declspec(dllexport)
 #      define PCRE2_EXP_DEFN       __declspec(dllexport)
 #    else
-#      define PCRE2_EXP_DECL       extern
+#      ifdef __cplusplus
+#        define PCRE2_EXP_DECL       extern "C"
+#      else
+#        define PCRE2_EXP_DECL       extern
+#      endif
 #      define PCRE2_EXP_DEFN
 #    endif
 #  else

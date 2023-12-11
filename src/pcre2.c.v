@@ -1,5 +1,6 @@
 module pcre2
 
+#flag -D PCRE2_STATIC
 #flag -I @VROOT/libpcre2
 #flag @VROOT/libpcre2/pcre2_auto_possess.c
 #flag @VROOT/libpcre2/pcre2_compile.c
