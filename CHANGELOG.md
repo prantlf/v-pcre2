@@ -1,5 +1,11 @@
 # Changes
 
+## [0.1.4](https://github.com/prantlf/v-pcre2/compare/v0.1.3...v0.1.4) (2023-12-11)
+
+### Bug Fixes
+
+* Use flags to force static linking instead of config define ([adb13ba](https://github.com/prantlf/v-pcre2/commit/adb13ba64cd195589181c383a3be8cd613f48c74))
+
 ## [0.1.3](https://github.com/prantlf/v-pcre2/compare/v0.1.2...v0.1.3) (2023-12-11)
 
 ### Bug Fixes
