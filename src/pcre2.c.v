@@ -29,14 +29,14 @@ module pcre2
 #flag @VROOT/libpcre2/pcre2_chartables.c
 #include "pcre2.h"
 
-[typedef]
+@[typedef]
 struct C.pcre2_memctl {
 	malloc      voidptr
 	free        voidptr
 	memory_data voidptr
 }
 
-[typedef]
+@[typedef]
 struct C.pcre2_code {
 	memctl             C.pcre2_memctl
 	tables             &u8
@@ -63,7 +63,7 @@ struct C.pcre2_code {
 	name_count         u16
 }
 
-[typedef]
+@[typedef]
 struct C.heapframe {
 	ecode             &u8
 	temp_sptr         &u8
@@ -86,7 +86,7 @@ struct C.heapframe {
 	ovector           [131072]usize
 }
 
-[typedef]
+@[typedef]
 struct C.pcre2_match_data {
 	memctl          C.pcre2_memctl
 	code            &C.pcre2_code
@@ -104,7 +104,7 @@ struct C.pcre2_match_data {
 	ovector         [131072]usize
 }
 
-[typedef]
+@[typedef]
 struct C.pcre2_match_context {
 	memctl                  C.pcre2_memctl
 	callout                 voidptr
@@ -117,7 +117,7 @@ struct C.pcre2_match_context {
 	depth_limit             u32
 }
 
-[typedef]
+@[typedef]
 struct C.pcre2_compile_context {
 	memctl             C.pcre2_memctl
 	stack_guard        voidptr
@@ -130,7 +130,7 @@ struct C.pcre2_compile_context {
 	extra_options      u32
 }
 
-[typedef]
+@[typedef]
 struct C.pcre2_general_context {
 	memctl C.pcre2_memctl
 }

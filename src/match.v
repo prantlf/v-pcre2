@@ -1,11 +1,11 @@
 module pcre2
 
-[noinit]
+@[noinit]
 pub struct Match {
 	data &C.pcre2_match_data
 }
 
-[direct_array_access]
+@[direct_array_access]
 pub fn (m &Match) group_bounds(idx int) ?(int, int) {
 	oveccount := C.pcre2_get_ovector_count(m.data)
 	if idx < 0 || idx >= oveccount {
@@ -21,7 +21,7 @@ pub fn (m &Match) group_bounds(idx int) ?(int, int) {
 	return start, end
 }
 
-[direct_array_access]
+@[direct_array_access]
 pub fn (m &Match) group_text(subject string, idx int) ?string {
 	return if start, end := m.group_bounds(idx) {
 		subject[start..end]
