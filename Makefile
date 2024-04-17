@@ -5,7 +5,7 @@ check:
 	v vet .
 
 test:
-	v -enable-globals -use-os-system-to-run test .
+	v -enable-globals test .
 
 clean:
 	rm -rf src/*_test src/*.dSYM
