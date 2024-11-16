@@ -1,5 +1,11 @@
 # Changes
 
+## [0.1.5](https://github.com/prantlf/v-pcre2/compare/v0.1.4...v0.1.5) (2024-11-16)
+
+### Bug Fixes
+
+* Fix sources for the new V compiler ([95ddcac](https://github.com/prantlf/v-pcre2/commit/95ddcac9c4ff702ddb7e19c9cd2ce3056e3fec79))
+
 ## [0.1.4](https://github.com/prantlf/v-pcre2/compare/v0.1.3...v0.1.4) (2023-12-11)
 
 ### Bug Fixes
