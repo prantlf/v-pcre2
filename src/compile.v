@@ -219,8 +219,8 @@ pub fn compile(source string, options u32) !&RegEx {
 			'pcre2_compile failed (${code})'
 		}
 		return CompileError{
-			msg: msg
-			code: code
+			msg:    msg
+			code:   code
 			offset: int(offset)
 		}
 	}
@@ -231,7 +231,7 @@ pub fn compile(source string, options u32) !&RegEx {
 		C.pcre2_code_free(re)
 		msg := 'getting the count of captures failed'
 		return CompileError{
-			msg: msg
+			msg:  msg
 			code: code
 		}
 	}
@@ -242,7 +242,7 @@ pub fn compile(source string, options u32) !&RegEx {
 		C.pcre2_code_free(re)
 		msg := 'getting the count of named captures failed'
 		return CompileError{
-			msg: msg
+			msg:  msg
 			code: code
 		}
 	}
@@ -256,7 +256,7 @@ pub fn compile(source string, options u32) !&RegEx {
 			C.pcre2_code_free(re)
 			msg := 'getting the table of named captures failed'
 			return CompileError{
-				msg: msg
+				msg:  msg
 				code: code
 			}
 		}
@@ -267,7 +267,7 @@ pub fn compile(source string, options u32) !&RegEx {
 			C.pcre2_code_free(re)
 			msg := 'getting size of an entry in the table of named captures failed'
 			return CompileError{
-				msg: msg
+				msg:  msg
 				code: code
 			}
 		}

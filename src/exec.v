@@ -61,7 +61,7 @@ pub fn (r &RegEx) exec_within_nochk(subject string, start int, end int, options 
 fn fail_exec(code int) ExecError {
 	return if code < 0 {
 		ExecError{
-			msg: 'executing the regular expression failed'
+			msg:  'executing the regular expression failed'
 			code: code
 		}
 	} else {
