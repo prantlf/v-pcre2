@@ -1,5 +1,11 @@
 # Changes
 
+## [0.2.0](https://github.com/prantlf/v-pcre2/compare/v0.1.5...v0.2.0) (2025-03-22)
+
+### Features
+
+* Upgrade PCRE2 to 10.45 ([d923669](https://github.com/prantlf/v-pcre2/commit/d9236690e74d8e24e91e59b0be22ce151e77b2e1))
+
 ## [0.1.5](https://github.com/prantlf/v-pcre2/compare/v0.1.4...v0.1.5) (2024-11-16)
 
 ### Bug Fixes
