@@ -1,7 +1,6 @@
 /* src/config.h.  Generated from config.h.in by configure.  */
 /* src/config.h.in.  Generated from configure.ac by autoheader.  */
 
-
 /* PCRE2 is written in Standard C, but there are a few non-standard things it
 can cope with, allowing it to run on SunOS4 and other "close to standard"
 systems.
@@ -53,11 +52,23 @@ sure both macros are undefined; an emulation function will then be used. */
    LF does in an ASCII/Unicode environment. */
 /* #undef EBCDIC_NL25 */
 
+/* Define to 1 if you have the <assert.h> header file. */
+#define HAVE_ASSERT_H 1
+
 /* Define this if your compiler supports __attribute__((uninitialized)) */
 #define HAVE_ATTRIBUTE_UNINITIALIZED 1
 
 /* Define to 1 if you have the `bcopy' function. */
 #define HAVE_BCOPY 1
+
+/* Define this if your compiler provides __assume() */
+/* #undef HAVE_BUILTIN_ASSUME */
+
+/* Define this if your compiler provides __builtin_mul_overflow() */
+/* #undef HAVE_BUILTIN_MUL_OVERFLOW */
+
+/* Define this if your compiler provides __builtin_unreachable() */
+/* #undef HAVE_BUILTIN_UNREACHABLE */
 
 /* Define to 1 if you have the <bzlib.h> header file. */
 #define HAVE_BZLIB_H 1
@@ -143,7 +154,8 @@ sure both macros are undefined; an emulation function will then be used. */
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
-/* Define to 1 if the compiler supports simple visibility declarations. */
+/* Define to 1 if the compiler supports simple visibility
+   declarations. */
 #define HAVE_VISIBILITY 1
 
 /* Define to 1 if you have the <wchar.h> header file. */
@@ -158,17 +170,23 @@ sure both macros are undefined; an emulation function will then be used. */
 /* This limits the amount of memory that may be used while matching a pattern.
    It applies to both pcre2_match() and pcre2_dfa_match(). It does not apply
    to JIT matching. The value is in kibibytes (units of 1024 bytes). */
+#ifndef HEAP_LIMIT
 #define HEAP_LIMIT 20000000
+#endif
 
 /* The value of LINK_SIZE determines the number of bytes used to store links
    as offsets within the compiled regex. The default is 2, which allows for
    compiled patterns up to 65535 code units long. This covers the vast
    majority of cases. However, PCRE2 can also be compiled to use 3 or 4 bytes
    instead. This allows for longer patterns in extreme cases. */
+#ifndef LINK_SIZE
 #define LINK_SIZE 2
+#endif
 
 /* Define to the sub-directory where libtool stores uninstalled libraries. */
+#ifndef LT_OBJDIR
 #define LT_OBJDIR ".libs/"
+#endif
 
 /* The value of MATCH_LIMIT determines the default number of times the
    pcre2_match() function can record a backtrack position during a single
@@ -177,7 +195,9 @@ sure both macros are undefined; an emulation function will then be used. */
    limit. The limit exists in order to catch runaway regular expressions that
    take for ever to determine that they do not match. The default is set very
    large so that it does not accidentally catch legitimate cases. */
+#ifndef MATCH_LIMIT
 #define MATCH_LIMIT 10000000
+#endif
 
 /* The above limit applies to all backtracks, whether or not they are nested.
    In some environments it is desirable to limit the nesting of backtracking
@@ -189,17 +209,29 @@ sure both macros are undefined; an emulation function will then be used. */
    limit. In the case of pcre2_dfa_match(), this limit controls the depth of
    the internal nested function calls that are used for pattern recursions,
    lookarounds, and atomic groups. */
+#ifndef MATCH_LIMIT_DEPTH
 #define MATCH_LIMIT_DEPTH MATCH_LIMIT
+#endif
 
 /* This limit is parameterized just in case anybody ever wants to change it.
    Care must be taken if it is increased, because it guards against integer
    overflow caused by enormously large patterns. */
+#ifndef MAX_NAME_COUNT
 #define MAX_NAME_COUNT 10000
+#endif
 
 /* This limit is parameterized just in case anybody ever wants to change it.
    Care must be taken if it is increased, because it guards against integer
    overflow caused by enormously large patterns. */
+#ifndef MAX_NAME_SIZE
 #define MAX_NAME_SIZE 32
+#endif
+
+/* The value of MAX_VARLOOKBEHIND specifies the default maximum length, in
+   characters, for a variable-length lookbehind assertion. */
+#ifndef MAX_VARLOOKBEHIND
+#define MAX_VARLOOKBEHIND 255
+#endif
 
 /* Defining NEVER_BACKSLASH_C locks out the use of \C in all patterns. */
 /* #undef NEVER_BACKSLASH_C */
@@ -208,7 +240,9 @@ sure both macros are undefined; an emulation function will then be used. */
    sequence. PCRE2 client programs can override this by selecting other values
    at run time. The valid values are 1 (CR), 2 (LF), 3 (CRLF), 4 (ANY), 5
    (ANYCRLF), and 6 (NUL). */
+#ifndef NEWLINE_DEFAULT
 #define NEWLINE_DEFAULT 5
+#endif
 
 /* Name of package */
 #define PACKAGE "pcre2"
@@ -220,7 +254,7 @@ sure both macros are undefined; an emulation function will then be used. */
 #define PACKAGE_NAME "PCRE2"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "PCRE2 10.42"
+#define PACKAGE_STRING "PCRE2 10.45"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "pcre2"
@@ -229,12 +263,14 @@ sure both macros are undefined; an emulation function will then be used. */
 #define PACKAGE_URL ""
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "10.42"
+#define PACKAGE_VERSION "10.45"
 
 /* The value of PARENS_NEST_LIMIT specifies the maximum depth of nested
    parentheses (of any kind) in a pattern. This limits the amount of system
    stack that is used while compiling a pattern. */
+#ifndef PARENS_NEST_LIMIT
 #define PARENS_NEST_LIMIT 250
+#endif
 
 /* The value of PCRE2GREP_BUFSIZE is the starting size of the buffer used by
    pcre2grep to hold parts of the file it is searching. The buffer will be
@@ -242,37 +278,35 @@ sure both macros are undefined; an emulation function will then be used. */
    very long lines. The actual amount of memory used by pcre2grep is three
    times this number, because it allows for the buffering of "before" and
    "after" lines. */
+#ifndef PCRE2GREP_BUFSIZE
 #define PCRE2GREP_BUFSIZE 20480
+#endif
 
 /* The value of PCRE2GREP_MAX_BUFSIZE specifies the maximum size of the buffer
    used by pcre2grep to hold parts of the file it is searching. The actual
    amount of memory used by pcre2grep is three times this number, because it
    allows for the buffering of "before" and "after" lines. */
+#ifndef PCRE2GREP_MAX_BUFSIZE
 #define PCRE2GREP_MAX_BUFSIZE 1048576
-
-/* to make a symbol visible */
-#define PCRE2POSIX_EXP_DECL extern __attribute__ ((visibility ("default")))
-
-/* to make a symbol visible */
-#define PCRE2POSIX_EXP_DEFN extern __attribute__ ((visibility ("default")))
+#endif
 
 /* Define to any value to include debugging code. */
 /* #undef PCRE2_DEBUG */
 
 /* to make a symbol visible */
-#define PCRE2_EXP_DECL extern __attribute__ ((visibility ("default")))
-
+#define PCRE2_EXPORT
 
 /* If you are compiling for a system other than a Unix-like system or
    Win32, and it needs some magic to be inserted before the definition
    of a function that is exported by the library, define this macro to
    contain the relevant magic. If you do not define this macro, a suitable
     __declspec value is used for Windows systems; in other environments
-   "extern" is used for a C compiler and "extern C" for a C++ compiler.
+   a compiler relevant "extern" is used with any "visibility" related
+   attributes from PCRE2_EXPORT included.
    This macro apears at the start of every exported function that is part
    of the external API. It does not appear on functions that are "external"
    in the C sense, but which are internal to the library. */
-#define PCRE2_EXP_DEFN __attribute__ ((visibility ("default")))
+/* #undef PCRE2_EXP_DEFN */
 
 /* Define to any value if linking statically (TODO: make nice with Libtool) */
 /* #undef PCRE2_STATIC */
@@ -290,6 +324,9 @@ sure both macros are undefined; an emulation function will then be used. */
    required in a freestanding environment). This macro is provided for
    backward compatibility; new code need not use it. */
 #define STDC_HEADERS 1
+
+/* Define to any value to enable differential fuzzing support. */
+/* #undef SUPPORT_DIFF_FUZZ */
 
 /* Define to any value to enable support for Just-In-Time compiling. */
 /* #undef SUPPORT_JIT */
@@ -425,9 +462,8 @@ sure both macros are undefined; an emulation function will then be used. */
 /* # undef _XOPEN_SOURCE */
 #endif
 
-
 /* Version number of package */
-#define VERSION "10.42"
+#define VERSION "10.45"
 
 /* Number of bits in a file offset, on hosts where this is settable. */
 /* #undef _FILE_OFFSET_BITS */

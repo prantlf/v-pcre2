@@ -1,9 +1,22 @@
 module pcre2
 
 #flag -D PCRE2_STATIC
+#flag -D PCRE2_EXPORT=
+#flag -D PCRE2_CODE_UNIT_WIDTH=8
+#flag -D LINK_SIZE=2
+#flag -D MAX_NAME_SIZE=32
+#flag -D MAX_NAME_COUNT=10000
+#flag -D MATCH_LIMIT=10000000
+#flag -D MATCH_LIMIT_DEPTH=10000000
+#flag -D HEAP_LIMIT=20000000
+#flag -D NEWLINE_DEFAULT=5
+#flag -D PARENS_NEST_LIMIT=250
+#flag -D MAX_VARLOOKBEHIND=255
 #flag -I @VROOT/libpcre2
 #flag @VROOT/libpcre2/pcre2_auto_possess.c
+#flag @VROOT/libpcre2/pcre2_chkdint.c
 #flag @VROOT/libpcre2/pcre2_compile.c
+#flag @VROOT/libpcre2/pcre2_compile_class.c
 #flag @VROOT/libpcre2/pcre2_config.c
 #flag @VROOT/libpcre2/pcre2_context.c
 #flag @VROOT/libpcre2/pcre2_convert.c
