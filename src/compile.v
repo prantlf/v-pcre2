@@ -211,7 +211,7 @@ pub fn compile(source string, options u32) !&RegEx {
 	re := C.pcre2_compile(source.str, source.len, options, &code, &offset, unsafe { nil })
 	if isnil(re) {
 		buffer := [256]u8{}
-		err := &u8(buffer[0])
+		err := unsafe { &u8(buffer[0]) }
 		len := C.pcre2_get_error_message(code, err, sizeof(buffer))
 		msg := if len > 0 {
 			unsafe { err.vstring_with_len(len) }
