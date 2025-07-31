@@ -250,7 +250,7 @@ pub fn compile(source string, options u32) !&RegEx {
 	mut name_data := []Name{cap: name_len}
 	mut name_buf := ''
 	if name_len > 0 {
-		mut name_table := &u8(0)
+		mut name_table := unsafe { &u8(0) }
 		code = C.pcre2_pattern_info(re, C.PCRE2_INFO_NAMETABLE, &name_table)
 		if code != 0 {
 			C.pcre2_code_free(re)
