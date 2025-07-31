@@ -1,5 +1,11 @@
 # Changes
 
+## [0.2.2](https://github.com/prantlf/v-pcre2/compare/v0.2.1...v0.2.2) (2025-07-31)
+
+### Bug Fixes
+
+* Fix compiler warnings ([4bde236](https://github.com/prantlf/v-pcre2/commit/4bde23652120c9c08f826c04980820ed862f8454))
+
 ## [0.2.1](https://github.com/prantlf/v-pcre2/compare/v0.2.0...v0.2.1) (2025-07-31)
 
 ### Bug Fixes
